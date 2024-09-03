@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.region
+  region     = var.region
 
 }
 
@@ -138,15 +138,16 @@ module "eks_node_group" {
   # Cloud Posse recommends pinning every module to a specific version
   # version     = "3.x.x"
 
-  instance_types        = var.instance_types
+  instance_types        = ["t4g.medium"]
   subnet_ids            = module.subnets.public_subnet_ids
-  min_size              = var.min_size
-  max_size              = var.max_size
-  desired_size          = var.desired_size
+  min_size              = 1
+  max_size              = 10
+  desired_size          = 1
   cluster_name          = module.eks_cluster.eks_cluster_id
   create_before_destroy = true
   kubernetes_version    = var.kubernetes_version == null || var.kubernetes_version == "" ? [] : [var.kubernetes_version]
-
+  ami_type              = var.ami_type
+  ami_release_version   = var.ami_release_version
   # Enable the Kubernetes cluster auto-scaler to find the auto-scaling group
   cluster_autoscaler_enabled = true
 
@@ -162,10 +163,10 @@ module "eks_node_group_react" {
 
   subnet_ids         = module.subnets.public_subnet_ids
   cluster_name       = module.eks_cluster.eks_cluster_id
-  instance_types     = var.instance_types
-  desired_size       = var.desired_size
-  min_size           = var.min_size
-  max_size           = var.max_size
+  instance_types     = ["t4g.medium"]
+  desired_size       = 1
+  min_size           = 1
+  max_size           = 10
   kubernetes_version = [var.kubernetes_version]
 
   ami_type            = var.ami_type
